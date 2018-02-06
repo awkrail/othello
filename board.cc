@@ -17,7 +17,7 @@ Board::Board(){
 
 void Board::Show(){
     // col
-    std::cout << ' ';
+    std::cout << "  ";
     for(int i=0; i<_kBoardLength; ++i){
         std::cout << i << ' ';
     }
@@ -38,4 +38,8 @@ void Board::Show(){
         }
         std::cout << std::endl;
     }
+}
+
+int Board::CheckWhiteBetweenBlacks(int row, int col){
+    return _board[row][col];
 }

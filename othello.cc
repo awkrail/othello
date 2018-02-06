@@ -20,6 +20,51 @@ int main(){
 
     std::cout << row << ' ' << col << std::endl;
 
+    const int lvector[] = {0, -1};
+    bool ok_flag = true; // 石が置けるかどうか
+    int rock_num; // 白石があるかどうか
+    bool white_flag = false;
+    bool black_flag = false;
+    int old_point[] = { row, col };
+    int point[] = { row, col };
+
+    while(point[0] >= 0 && point[1] >= 0){
+        if(board.CheckWhiteBetweenBlacks(old_point[0], old_point[1]) != 0){
+            std::cout << "すでに置かれています" << std::endl;
+            break;
+        }
+
+        point[0] += lvector[0];
+        point[1] += lvector[1];
+
+        // 石の種類を確認する
+        rock_num = board.CheckWhiteBetweenBlacks(point[0], point[1]);
+
+        // 空白のとき
+        if(rock_num == 0){
+            ok_flag = false;
+            break;
+        }
+
+        if(rock_num == 1){
+            black_flag = true;
+        }
+
+        if(rock_num == 2){
+            white_flag = true;
+        }
+
+        if(black_flag && white_flag){
+            break;
+        }
+    }
+
+    if(black_flag && white_flag && ok_flag){
+        std::cout << "you can put here" << std::endl;
+    }else{
+        std::cout << "you can't put here" << std::endl;
+    }
+
     // 石が置けるかどうか
     /**
     static const int DIR = 8;
