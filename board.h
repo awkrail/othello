@@ -7,7 +7,9 @@ class Board {
         void Show();
         int GetBoardRock(int row, int col);
         bool CheckPutDown(const int* const player_point);
+        bool CheckPutDown(const int* const player_point, const int* const vector);
     private:
+        static const int _kVectorSize = 8;
         static const int _kBoardLength = 8;
         int _board[8][8];
 };

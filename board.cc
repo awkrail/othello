@@ -45,8 +45,27 @@ int Board::GetBoardRock(int row, int col){
 }
 
 bool Board::CheckPutDown(const int* const player_point){
-    //const int lvector[] = {0, -1};
-    const int lvector[] = {-1, 0};
+    const int lup[] = {-1, -1};
+    const int lnw[] = {0, -1};
+    const int ldw[] = {1, -1};
+    const int evup[] = {-1, 0};
+    const int evdw[] = {1, 0};
+    const int rup[] = {-1, 1};
+    const int rnw[] = {0, 1};
+    const int rdw[] = {1, 1};
+    const int* const vectors[] = {lup, lnw, ldw, evup, evdw, rup, rnw, rdw};
+    bool ok_flag = false;
+
+    for(int i=0; i<_kVectorSize; ++i){
+        if(CheckPutDown(player_point, vectors[i])){
+            ok_flag = true;
+        }
+    }
+
+    return ok_flag;
+}
+
+bool Board::CheckPutDown(const int* const player_point, const int* const vector){
 
     bool ok_flag = true;
     bool white_flag = false;
@@ -54,14 +73,14 @@ bool Board::CheckPutDown(const int* const player_point){
     int rock_num;
     int point[] = { player_point[0], player_point[1] };
 
-    while(point[0] >= 0 && point[1] >= 0){
+    while(point[0] >= 0 && point[1] >= 0 && point[0] < _kBoardLength && point[1] < _kBoardLength){
         if(GetBoardRock(player_point[0], player_point[1]) != 0){
             ok_flag = false;
             break;
         }
 
-        point[0] += lvector[0];
-        point[1] += lvector[1];
+        point[0] += vector[0];
+        point[1] += vector[1];
 
         // 石の種類を確認する
         rock_num = GetBoardRock(point[0], point[1]);
