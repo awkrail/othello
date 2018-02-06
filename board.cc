@@ -44,6 +44,47 @@ int Board::GetBoardRock(int row, int col){
     return _board[row][col];
 }
 
+// this method is called only after Board::CheckPutDown
+void Board::Reverse(const int* const player_point){
+    const int lup[] = {-1, -1};
+    const int lnw[] = {0, -1};
+    const int ldw[] = {1, -1};
+    const int evup[] = {-1, 0};
+    const int evdw[] = {1, 0};
+    const int rup[] = {-1, 1};
+    const int rnw[] = {0, 1};
+    const int rdw[] = {1, 1};
+    const int* const vectors[] = {lup, lnw, ldw, evup, evdw, rup, rnw, rdw};
+    int point[] = { player_point[0], player_point[1] };
+
+    for(int i=0; i<_kVectorSize; ++i){
+        Reverse(player_point, vectors[i]);
+    }
+}
+
+void Board::Reverse(const int* const player_point, const int* const vector){
+    _board[player_point[0]][player_point[1]] = 1; // black
+
+    int point[] = { player_point[0], player_point[1] };
+    int rock_num;
+
+    while(point[0] >= 0 && point[1] >= 0 && point[0] < _kBoardLength && point[1] < _kBoardLength){
+
+        point[0] += vector[0];
+        point[1] += vector[1];
+
+        // TODO: Blackの立場でもWhiteの立場でも, ひっくり返るメソッドに変更する
+        // 今はBlackのみ
+        rock_num = GetBoardRock(point[0], point[1]);
+
+        if(rock_num == 1){
+            break;
+        }else if(rock_num == 2){
+            _board[point[0]][point[1]] = 1;
+        }
+    }
+}
+
 bool Board::CheckPutDown(const int* const player_point){
     const int lup[] = {-1, -1};
     const int lnw[] = {0, -1};
