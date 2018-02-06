@@ -40,6 +40,42 @@ void Board::Show(){
     }
 }
 
-int Board::CheckWhiteBetweenBlacks(int row, int col){
+int Board::GetBoardRock(int row, int col){
     return _board[row][col];
+}
+
+bool Board::CheckPutDown(const int* const player_point){
+    //const int lvector[] = {0, -1};
+    const int lvector[] = {-1, 0};
+
+    bool ok_flag = true;
+    bool white_flag = false;
+    bool black_flag = false;
+    int rock_num;
+    int point[] = { player_point[0], player_point[1] };
+
+    while(point[0] >= 0 && point[1] >= 0){
+        if(GetBoardRock(player_point[0], player_point[1]) != 0){
+            ok_flag = false;
+            break;
+        }
+
+        point[0] += lvector[0];
+        point[1] += lvector[1];
+
+        // 石の種類を確認する
+        rock_num = GetBoardRock(point[0], point[1]);
+
+        switch(rock_num){
+            case 0 : ok_flag = false; break;
+            case 1 : black_flag = true; break;
+            case 2 : white_flag = true; break;
+        }
+
+        if(black_flag && white_flag){
+            break;
+        }
+    }
+
+    return black_flag && white_flag && ok_flag;
 }

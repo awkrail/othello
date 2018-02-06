@@ -20,6 +20,7 @@ int main(){
 
     std::cout << row << ' ' << col << std::endl;
 
+    /**
     const int lvector[] = {0, -1};
     bool ok_flag = true; // 石が置けるかどうか
     int rock_num; // 白石があるかどうか
@@ -58,12 +59,15 @@ int main(){
             break;
         }
     }
+    **/
+    int player_point[] = { row, col };
 
-    if(black_flag && white_flag && ok_flag){
+    if(board.CheckPutDown(player_point)){
         std::cout << "you can put here" << std::endl;
     }else{
         std::cout << "you can't put here" << std::endl;
     }
+
 
     // 石が置けるかどうか
     /**
