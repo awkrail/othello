@@ -110,16 +110,14 @@ bool Board::CheckPutDown(const int* const player_point){
 // かつ, 白石のサイドでも同様の処理ができるように共通化するべき
 bool Board::CheckPutDown(const int* const player_point, const int* const vector){
 
-    bool ok_flag = true;
     bool white_flag = false;
-    bool black_flag = false;
     int rock_num;
+    int count_i = 0;
     int point[] = { player_point[0], player_point[1] };
 
     while(point[0] >= 0 && point[1] >= 0 && point[0] < _kBoardLength && point[1] < _kBoardLength){
         if(GetBoardRock(player_point[0], player_point[1]) != 0){
-            ok_flag = false;
-            break;
+            return false;
         }
 
         point[0] += vector[0];
@@ -128,18 +126,25 @@ bool Board::CheckPutDown(const int* const player_point, const int* const vector)
         // 石の種類を確認する
         rock_num = GetBoardRock(point[0], point[1]);
 
-        switch(rock_num){
-            case 0 : ok_flag = false; break;
-            case 1 : black_flag = true; break;
-            case 2 : white_flag = true; break;
+        // それが置石の周辺であり、かつ白石であったら..
+        if(count_i == 0 && rock_num == 2){
+            count_i++;
+            white_flag = true;
+            continue;
         }
 
-        if(black_flag && white_flag){
-            break;
+        if(!white_flag){
+            return false;
+        }else{
+            switch(rock_num){
+                case 0 : return false; break;
+                case 1 : return true; break;
+                case 2 : continue;
+            }
         }
     }
 
-    return black_flag && white_flag && ok_flag;
+    return false; // uun
 }
 
 bool Board::GetTurn(){
