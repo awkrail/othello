@@ -139,3 +139,11 @@ bool Board::CheckPutDown(const int* const player_point, const int* const vector)
 
     return black_flag && white_flag && ok_flag;
 }
+
+bool Board::GetTurn(){
+    return _turn;
+}
+
+void Board::SetTurn(bool turn){
+    _turn = turn;
+}
