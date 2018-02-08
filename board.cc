@@ -106,6 +106,8 @@ bool Board::CheckPutDown(const int* const player_point){
     return ok_flag;
 }
 
+// ここにバグがあり
+// かつ, 白石のサイドでも同様の処理ができるように共通化するべき
 bool Board::CheckPutDown(const int* const player_point, const int* const vector){
 
     bool ok_flag = true;
