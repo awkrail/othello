@@ -63,7 +63,11 @@ void Board::Reverse(const int* const player_point){
 }
 
 void Board::Reverse(const int* const player_point, const int* const vector){
-    _board[player_point[0]][player_point[1]] = 1; // black
+    if(_turn){
+        _board[player_point[0]][player_point[1]] = 1; // black
+    }else{
+        _board[player_point[0]][player_point[1]] = 2; // white
+    }
 
     int point[] = { player_point[0], player_point[1] };
     int rock_num;
@@ -73,18 +77,25 @@ void Board::Reverse(const int* const player_point, const int* const vector){
         point[0] += vector[0];
         point[1] += vector[1];
 
-        // TODO: Blackの立場でもWhiteの立場でも, ひっくり返るメソッドに変更する
-        // 今はBlackのみ
         rock_num = GetBoardRock(point[0], point[1]);
 
-        if(rock_num == 1){
-            break;
-        }else if(rock_num == 2){
-            _board[point[0]][point[1]] = 1;
+        if(_turn){
+            if(rock_num == 1){
+                break;
+            }else if(rock_num == 2){
+                _board[point[0]][point[1]] = 1;
+            }
+        }else{
+            if(rock_num == 2){
+                break;
+            }else if(rock_num == 1){
+                _board[point[0]][point[1]] = 2;
+            }
         }
     }
 }
 
+// 今の実装だと一方向にしか行かないようになってる
 bool Board::CheckPutDown(const int* const player_point){
     const int lup[] = {-1, -1};
     const int lnw[] = {0, -1};
@@ -94,57 +105,69 @@ bool Board::CheckPutDown(const int* const player_point){
     const int rup[] = {-1, 1};
     const int rnw[] = {0, 1};
     const int rdw[] = {1, 1};
+    // どうやら方向の順番に依存しているみたいだ <- なんで..?
     const int* const vectors[] = {lup, lnw, ldw, evup, evdw, rup, rnw, rdw};
     bool ok_flag = false;
 
     for(int i=0; i<_kVectorSize; ++i){
-        if(CheckPutDown(player_point, vectors[i])){
+        std::cout << "Vector" << vectors[i][0] << ' ' << vectors[i][1] << std::endl;
+        if(CheckPutDown(player_point, vectors[i], ok_flag)){
             ok_flag = true;
+            Reverse(player_point, vectors[i]);
         }
     }
 
     return ok_flag;
 }
 
-// ここにバグがあり
-// かつ, 白石のサイドでも同様の処理ができるように共通化するべき
-bool Board::CheckPutDown(const int* const player_point, const int* const vector){
+bool Board::CheckPutDown(const int* const player_point, const int* const vector, const bool ok_flag){
 
-    bool white_flag = false;
+    bool player_flag = false;
+    int turn2rock_num = _turn ? 2 : 1;
     int rock_num;
     int count_i = 0;
     int point[] = { player_point[0], player_point[1] };
 
     while(point[0] >= 0 && point[1] >= 0 && point[0] < _kBoardLength && point[1] < _kBoardLength){
-        if(GetBoardRock(player_point[0], player_point[1]) != 0){
+        if(GetBoardRock(player_point[0], player_point[1]) != 0 && !ok_flag){
+            std::cout << "Hoge" << std::endl;
             return false;
         }
 
         point[0] += vector[0];
         point[1] += vector[1];
 
-        // 石の種類を確認する
+        // なぜこれが動かない..?
+        std::cout << point[0] << ' ' << point[1] << std::endl;
         rock_num = GetBoardRock(point[0], point[1]);
 
         // それが置石の周辺であり、かつ白石であったら..
-        if(count_i == 0 && rock_num == 2){
+        if(count_i == 0 && rock_num == turn2rock_num){
             count_i++;
-            white_flag = true;
+            player_flag = true;
             continue;
         }
 
-        if(!white_flag){
+        if(!player_flag){
             return false;
         }else{
+            if(_turn){
             switch(rock_num){
                 case 0 : return false; break;
                 case 1 : return true; break;
                 case 2 : continue;
+                }
+            }else{
+            switch(rock_num){
+                case 0 : return false; break;
+                case 1 : continue; break;
+                case 2 : return true;
+                }
             }
         }
     }
 
-    return false; // uun
+    return false;
 }
 
 bool Board::GetTurn(){

@@ -9,7 +9,7 @@ class Board {
         void Reverse(const int* const player_point);
         void Reverse(const int* const player_point, const int* const vector);
         bool CheckPutDown(const int* const player_point);
-        bool CheckPutDown(const int* const player_point, const int* const vector);
+        bool CheckPutDown(const int* const player_point, const int* const vector, const bool ok_flag);
         bool GetTurn();
         void SetTurn(bool turn);
     private:
