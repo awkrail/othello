@@ -30,8 +30,7 @@ int main(){
             int player_point[] = { row, col };
             std::cout << row << ' ' << col << std::endl;
 
-            if(board.CheckPutDown(player_point)){
-                // board.Reverse(player_point);
+            if(board.ProcessGame(player_point)){
                 board.Show();
                 board.SetTurn(!board.GetTurn());
             }else{
@@ -46,38 +45,13 @@ int main(){
             int player_point[] = { row, col };
             std::cout << row << ' ' << col << std::endl;
 
-            if(board.CheckPutDown(player_point)){
-                // board.Reverse(player_point); // whiteでも実装するよ
+            if(board.ProcessGame(player_point)){
                 board.Show();
                 board.SetTurn(!board.GetTurn());
             }else{
                 std::cout << "you can't put here. please write again" << std::endl;
                 continue;
             }
-
-            //break;
-            //player.Input();
         }
     }
-
-    /**
-    Player player = Player();
-    player.Input();
-
-    int row = player.GetRowIndex();
-    int col = player.GetColIndex();
-
-    std::cout << row << ' ' << col << std::endl;
-
-    int player_point[] = { row, col };
-
-    if(board.CheckPutDown(player_point)){
-        std::cout << "you can put here" << std::endl;
-        // 石がひっくり変える処理
-        board.Reverse(player_point);
-        board.Show();
-    }else{
-        std::cout << "you can't put here" << std::endl;
-    }
-    **/
 }
