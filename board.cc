@@ -183,3 +183,26 @@ bool Board::GetTurn(){
 void Board::SetTurn(bool turn){
     _turn = turn;
 }
+
+void Board::CountRocks(){
+    _black_rocks = 0;
+    _white_rocks = 0;
+
+    for(int i=0; i<_kBoardLength; ++i){
+        for(int j=0; j<_kBoardLength; ++j){
+            if(GetBoardRock(i, j) == 1){
+                _black_rocks++;
+            }else if(GetBoardRock(i, j) == 2){
+                _white_rocks++;
+            }
+        }
+    }
+}
+
+int Board::GetBlackRocks(){
+    return _black_rocks;
+}
+
+int Board::GetWhiteRocks(){
+    return _white_rocks;
+}

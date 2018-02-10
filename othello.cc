@@ -11,7 +11,6 @@ int parse_alphabet(char row){
 int main(){
     Board board = Board();
     board.Show();
-    // Player Turn
     board.SetTurn(true);
     Player player = Player();
 
@@ -19,17 +18,21 @@ int main(){
     // Playerクラスを継承させても良さそう.
     // 一旦入力はユーザができる形にする
     Player opponent = Player();
+    int double_skip = 0;
 
     // 両方が置けるかどうかのチェック
-    while(board.CheckPutDown()){
+    while(1){
 
         bool skip = !board.CheckPutDown();
         if(skip){
             std::cout << "skip turn " << (board.GetTurn() ? "black user" : "white user") << std::endl;
             board.SetTurn(!board.GetTurn());
+            double_skip++;
         }
+        if(double_skip == 2) break;
 
         if(board.GetTurn()){
+            double_skip = 0;
             player.Input();
             int row = player.GetRowIndex();
             int col = player.GetColIndex();
@@ -45,6 +48,7 @@ int main(){
                 continue;
             }
         }else{
+            double_skip = 0;
             player.Input();
             int row = player.GetRowIndex();
             int col = player.GetColIndex();
@@ -60,5 +64,14 @@ int main(){
                 continue;
             }
         }
+    }
+
+    board.CountRocks();
+    if(board.GetBlackRocks() > board.GetWhiteRocks()){
+        std::cout << "Player 1 win" << std::endl;
+    }else if(board.GetBlackRocks() < board.GetWhiteRocks()){
+        std::cout << "Player 2 win" << std::endl;
+    }else{
+        std::cout << "Draw" << std::endl;
     }
 }
