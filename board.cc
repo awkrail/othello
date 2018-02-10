@@ -100,6 +100,36 @@ bool Board::ProcessGame(const int* const player_point){
     return ok_flag;
 }
 
+bool Board::CheckPutDown(){
+    const int lup[] = {-1, -1};
+    const int lnw[] = {0, -1};
+    const int ldw[] = {1, -1};
+    const int evup[] = {-1, 0};
+    const int evdw[] = {1, 0};
+    const int rup[] = {-1, 1};
+    const int rnw[] = {0, 1};
+    const int rdw[] = {1, 1};
+    const int* const vectors[] = {lup, lnw, ldw, evup, evdw, rup, rnw, rdw};
+    bool ok_flag = false;
+
+    for(int i=0; i<_kBoardLength; ++i){
+        for(int j=0; j<_kBoardLength; ++j){
+
+            const int row = i;
+            const int col = j;
+            const int player_point[] = { row, col };
+
+            for(int i=0; i<_kVectorSize; ++i){
+                if(CheckPutDown(player_point, vectors[i], ok_flag)){
+                    return true;
+                }
+            }
+
+        }
+    }
+    return false;
+}
+
 bool Board::CheckPutDown(const int* const player_point, const int* const vector, const bool ok_flag){
 
     bool player_flag = false;
@@ -116,11 +146,8 @@ bool Board::CheckPutDown(const int* const player_point, const int* const vector,
         point[0] += vector[0];
         point[1] += vector[1];
 
-        // なぜこれが動かない..?
-        std::cout << point[0] << ' ' << point[1] << std::endl;
         rock_num = GetBoardRock(point[0], point[1]);
 
-        // それが置石の周辺であり、かつ白石であったら..
         if(count_i == 0 && rock_num == turn2rock_num){
             count_i++;
             player_flag = true;

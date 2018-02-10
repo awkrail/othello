@@ -21,7 +21,14 @@ int main(){
     Player opponent = Player();
 
     // 両方が置けるかどうかのチェック
-    while(1){
+    while(board.CheckPutDown()){
+
+        bool skip = !board.CheckPutDown();
+        if(skip){
+            std::cout << "skip turn " << (board.GetTurn() ? "black user" : "white user") << std::endl;
+            board.SetTurn(!board.GetTurn());
+        }
+
         if(board.GetTurn()){
             player.Input();
             int row = player.GetRowIndex();
